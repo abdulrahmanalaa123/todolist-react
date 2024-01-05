@@ -18,6 +18,7 @@ export default function EditTodoForm({ editTodo, editToggle, todo }) {
         <input
           type="text"
           placeholder="Edit Your task"
+          value={value}
           className="w-[80%] h-14  border-[#8758ff] p-2 border-2 text-white bg-transparent mt-4 mb-8 placeholder:[#ffffff4d]"
           onChange={(e) => {
             setValue(e.target.value);
