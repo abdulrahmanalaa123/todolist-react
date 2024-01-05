@@ -16,6 +16,7 @@ export default function TodoWrapper() {
   };
 
   const deleteTodos = (id) => {
+    console.log("hello" + todos);
     const newTodos = todos.filter((todo) => todo.id !== id);
     setTodos(newTodos);
   };
@@ -29,7 +30,9 @@ export default function TodoWrapper() {
 
   const editTask = (task, id) => {
     const newTodos = todos.map((todo) =>
-      todo.id === id ? { ...todo, task: task } : todo
+      todo.id === id
+        ? { ...todo, task: task, isEditing: !todo.isEditing }
+        : todo
     );
     setTodos(newTodos);
   };
@@ -38,8 +41,10 @@ export default function TodoWrapper() {
     const newTodos = todos.map((todo) =>
       todo.id === id ? { ...todo, completed: !todo.completed } : todo
     );
+    console.log(newTodos);
     setTodos(newTodos);
   };
+  console.log(todos);
   return (
     <div className="flex flex-col justify-center items-center bg-[#1A1A40]  mt-20 p-8 px-16 rounded-md w-full">
       <h1 className="text-3xl text-white font-semibold">Get Things Done!</h1>
@@ -47,13 +52,19 @@ export default function TodoWrapper() {
 
       {todos.map((todo) =>
         todo.isEditing ? (
-          <EditTodoForm editTask={editTask} todo={todo} />
+          <EditTodoForm
+            editTodo={editTask}
+            editToggle={editToggle}
+            todo={todo}
+            key={todo.id}
+          />
         ) : (
           <Todo
             todo={todo}
             editToggle={editToggle}
             deleteTodo={deleteTodos}
             toggleComplete={toggleComplete}
+            key={todo.id}
           />
         )
       )}

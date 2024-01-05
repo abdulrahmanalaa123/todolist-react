@@ -22,7 +22,6 @@ export default function TodoForm({ addTodo }) {
           placeholder="What is the task?"
           value={value}
           onChange={(e) => {
-            console.log(e.target.value);
             setValue(e.target.value);
           }}
           className="w-[80%] h-14  border-[#8758ff] p-2 border-2 text-white bg-transparent mt-4 mb-8 placeholder:[#ffffff4d]"

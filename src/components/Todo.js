@@ -5,27 +5,22 @@ import React from "react";
 
 export default function Todo({ todo, deleteTodo, editToggle, toggleComplete }) {
   return (
-    <div className="bg-[#8758ff] flex justify-between p-4 rounded-md text-white">
+    <div className="bg-[#8758ff] flex justify-between p-4 rounded-md text-white w-full mb-4">
       <p
-        onclick={() => {
-          toggleComplete(todo.id);
-        }}
+        className={`${todo.completed ? "line-through" : "no-underline"}`}
+        onClick={() => toggleComplete(todo.id)}
       >
         {todo.task}
       </p>
       <div className="text-white">
         <FontAwesomeIcon
           icon={faPenToSquare}
-          onclick={() => {
-            editToggle(todo.id);
-          }}
+          onClick={() => editToggle(todo.id)}
           className="cursor-pointer"
         ></FontAwesomeIcon>
         <FontAwesomeIcon
           icon={faTrash}
-          onclick={() => {
-            deleteTodo(todo.id);
-          }}
+          onClick={() => deleteTodo(todo.id)}
           className="ml-3 cursor-pointer"
         ></FontAwesomeIcon>
       </div>
