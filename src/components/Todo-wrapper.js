@@ -3,59 +3,80 @@ import TodoForm from "./Todo-form";
 import Todo from "./Todo";
 import { v4 as uuidv4 } from "uuid";
 import EditTodoForm from "./Edit-Todo-Form";
-
+import db from "../firebase.js";
+import {
+  collection,
+  onSnapshot,
+  doc,
+  setDoc,
+  deleteDoc,
+  updateDoc,
+} from "firebase/firestore";
 export default function TodoWrapper() {
   const [todos, setTodos] = useState([]);
+  const collectionRef = collection(db, "tasks");
 
   useEffect(() => {
-    const savedTodos = JSON.parse(localStorage.getItem("todos")) || [];
-    setTodos(savedTodos);
+    // const savedTodos = JSON.parse(localStorage.getItem("todos")) || [];
+    // setTodos(savedTodos);
+    const collectionRef = collection(db, "tasks");
+
+    const subscribe = onSnapshot(collectionRef, (querySnapshot) => {
+      const tasks = [];
+      querySnapshot.forEach((todo) => {
+        console.log(todo.data());
+        tasks.push(todo.data());
+      });
+      setTodos(tasks);
+    });
+
+    return () => subscribe();
   }, []);
 
   const addTodos = (todo) => {
-    const newTodos = [
-      ...todos,
-      { id: uuidv4(), task: todo, completed: false, isEditing: false },
-    ];
-    localStorage.setItem("todos", JSON.stringify(newTodos));
-    setTodos(newTodos);
+    //const newTodos = [
+    //  ...todos,
+    const newTodo = {
+      id: uuidv4(),
+      task: todo,
+      completed: false,
+      isEditing: false,
+    };
+    //];
+    // localStorage.setItem("todos", JSON.stringify(newTodos));
+    const docref = doc(collectionRef, newTodo.id);
+    setDoc(docref, newTodo);
+    // setTodos(newTodos);
   };
 
-  const deleteTodos = (id) => {
-    console.log("hello" + todos);
-    const newTodos = todos.filter((todo) => todo.id !== id);
-    localStorage.setItem("todos", JSON.stringify(newTodos));
-
-    setTodos(newTodos);
+  const deleteTodos = (todo) => {
+    // const newTodos = todos.filter((todo) => todo.id !== id);
+    // localStorage.setItem("todos", JSON.stringify(newTodos));
+    const docref = doc(collectionRef, todo.id);
+    deleteDoc(docref);
+    // setTodos(newTodos);
   };
 
-  const editToggle = (id) => {
-    const newTodos = todos.map((todo) =>
-      todo.id === id ? { ...todo, isEditing: !todo.isEditing } : todo
-    );
-    localStorage.setItem("todos", JSON.stringify(newTodos));
+  const editToggle = (todo) => {
+    // localStorage.setItem("todos", JSON.stringify(newTodos));
+    const docref = doc(collectionRef, todo.id);
+    updateDoc(docref, { isEditing: !todo.isEditing });
 
-    setTodos(newTodos);
+    // setTodos(newTodos);
   };
 
-  const editTask = (task, id) => {
-    const newTodos = todos.map((todo) =>
-      todo.id === id
-        ? { ...todo, task: task, isEditing: !todo.isEditing }
-        : todo
-    );
-    localStorage.setItem("todos", JSON.stringify(newTodos));
-
-    setTodos(newTodos);
+  const editTask = (task, todo) => {
+    //localStorage.setItem("todos", JSON.stringify(newTodos));
+    const docref = doc(collectionRef, todo.id);
+    updateDoc(docref, { task: task, isEditing: !todo.isEditing });
+    // setTodos(newTodos);
   };
 
-  const toggleComplete = (id) => {
-    const newTodos = todos.map((todo) =>
-      todo.id === id ? { ...todo, completed: !todo.completed } : todo
-    );
-    localStorage.setItem("todos", JSON.stringify(newTodos));
-
-    setTodos(newTodos);
+  const toggleComplete = (todo) => {
+    // localStorage.setItem("todos", JSON.stringify(newTodos));
+    const docref = doc(collectionRef, todo.id);
+    updateDoc(docref, { completed: !todo.completed });
+    // setTodos(newTodos);
   };
 
   return (

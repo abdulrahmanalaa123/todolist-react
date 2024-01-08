@@ -9,7 +9,7 @@ export default function EditTodoForm({ editTodo, editToggle, todo }) {
     e.preventDefault();
 
     if (value) {
-      editTodo(value, todo.id);
+      editTodo(value, todo);
     }
   };
   return (
