@@ -19,7 +19,6 @@ export default function TodoWrapper() {
   useEffect(() => {
     // const savedTodos = JSON.parse(localStorage.getItem("todos")) || [];
     // setTodos(savedTodos);
-    const collectionRef = collection(db, "tasks");
 
     const subscribe = onSnapshot(collectionRef, (querySnapshot) => {
       const tasks = [];
@@ -30,7 +29,10 @@ export default function TodoWrapper() {
       setTodos(tasks);
     });
 
-    return () => subscribe();
+    return () => {
+      subscribe();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const addTodos = (todo) => {
